@@ -58,7 +58,7 @@ const BookmarkList = forwardRef<{ addBookmark: (bookmark: Bookmark) => void }, B
           table: 'bookmarks',
           filter: `user_id=eq.${userId}`,
         },
-        (payload) => {
+        (payload: any) => {
           console.log('🎉 Realtime INSERT from postgres:', payload)
           setBookmarks((current) => {
             if (current.some(b => b.id === payload.new.id)) {
@@ -77,13 +77,13 @@ const BookmarkList = forwardRef<{ addBookmark: (bookmark: Bookmark) => void }, B
           table: 'bookmarks',
           filter: `user_id=eq.${userId}`,
         },
-        (payload) => {
+        (payload: any) => {
           console.log('🗑️ Realtime DELETE:', payload)
           setBookmarks((current) => current.filter((b) => b.id !== payload.old.id))
         }
       )
       // Also listen to broadcast messages (as backup)
-      .on('broadcast', { event: 'bookmark-added' }, (payload) => {
+      .on('broadcast', { event: 'bookmark-added' }, (payload: any) => {
         console.log('📢 Broadcast received:', payload)
         const bookmark = payload.payload as Bookmark
         setBookmarks((current) => {
@@ -93,7 +93,7 @@ const BookmarkList = forwardRef<{ addBookmark: (bookmark: Bookmark) => void }, B
           return [bookmark, ...current]
         })
       })
-      .subscribe((status) => {
+      .subscribe((status: string) => {
         console.log('📡 Status:', status)
         if (status === 'SUBSCRIBED') {
           console.log('✅ Subscribed to', channelName)
